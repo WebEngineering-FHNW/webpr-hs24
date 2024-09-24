@@ -1,27 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Scope Tests</title>
-</head>
-<body>
+  </head>
+  <body>
     <script>
+      const test = (x) => document.writeln(String(x) + "<br>");
 
-        const test = x => document.writeln( String(x));
-
-        let x = 0;
-        function foo() {
-            let x = 1;
-            document.writeln(String(x));
-        }
-        foo();
+      let x = 0;
+      function foo() {
+        let x = 1;
         document.writeln(String(x));
+      }
+      foo();
+      document.writeln(String(x));
 
-        // test( id(id) === id);
-        // test( Konst(id)(undefined) === id);
-        // test( Kite(undefined)(id) === id);
+      //   var x = 0;
+      //   function foo() {
+      //     document.writeln(String(x));
+      //     var x = 1; //hoisting
+      //   }
+      //   foo();
+      //   document.writeln(String(x));
 
+      // IIFE, immediately invoked function expression
+      (() => {
+        let x = 1;
+        document.writeln(String(x));
+      })();
+
+      // anonymous function (block)
+      {
+        let x = 1;
+        document.writeln(String(x));
+      }
+
+      // lambda calculus
+
+      const id = (x) => x;
+      test(id(id) === id);
+
+      const Konst = (x) => (_) => x;
+      test(Konst(id)(undefined) === id);
+
+      // const Kite = (_) => (y) => y;
+      // const Kite = (_) => (y) => id(y);
+      // const Kite = (_) => id;
+      const Kite = Konst(id);
+      test(Kite(undefined)(id) === id);
     </script>
-</body>
+  </body>
 </html>
-
