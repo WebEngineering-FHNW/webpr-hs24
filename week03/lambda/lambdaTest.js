@@ -5,33 +5,33 @@ const ok = [];
 const test = result => ok.push(result);
 
 // // id
-// test( id(1) === 1 );
-// test( id(id) === id );
+test( id(1) === 1 );
+test( id(id) === id );
 //
 // // konst
-// test( konst(42)(0) === 42 );
-// test( konst(42)(1) === 42 );
-// test( konst(42)(null) === 42 );
+test( konst(42)(0)    === 42 );
+test( konst(42)(1)    === 42 );
+test( konst(42)(null) === 42 );
 //
 // // kite
-// test( snd(null)(42) === 42 );
+test( snd(null)(42) === 42 );
 //
 // // true
 //
-// test( T(1)(0) === 1 );
-// test( F(1)(0) === 0 );
+test( T(1)(0) === 1 );
+test( F(1)(0) === 0 );
 //
 // // and
-// test( and(F)(F) === F );
-// test( and(T)(F) === F );
-// test( and(F)(T) === F );
-// test( and(T)(T) === T );
+test( and(F)(F) === F );
+test( and(T)(F) === F );
+test( and(F)(T) === F );
+test( and(T)(T) === T );
 //
 // // or
-// test( or(F)(F) === F );
-// test( or(T)(F) === T );
-// test( or(F)(T) === T );
-// test( or(T)(T) === T );
+test( or(F)(F) === F );
+test( or(T)(F) === T );
+test( or(F)(T) === T );
+test( or(T)(T) === T );
 
 // flip
 // flip(f)(x)(y) = f(y)(x)
@@ -42,9 +42,9 @@ const test = result => ok.push(result);
 //
 // // Pair
 //
-// const dierk = Pair("Dierk")("König"); // immutable
-// test( dierk(firstname) === "Dierk");
-// test( dierk(lastname)  === "König");
+const dierk = Pair("Dierk")("König"); // immutable
+test( dierk(firstname) === "Dierk");
+test( dierk(lastname)  === "König");
 //
 // const tdierk = Triple("Dierk")("König")(50); // immutable
 // test( tdierk(tfirstname) === "Dierk");
@@ -71,14 +71,14 @@ const test = result => ok.push(result);
 //
 
 
-// const safeDiv = num => divisor =>
-//     divisor === 0
-//     ? Left("schlecht!")
-//     : Right(num / divisor);
-//
-// either( safeDiv(1)(0)  )
-//       ( x => console.error(x))
-//       ( x => console.log(x));
+const safeDiv = num => divisor =>
+    divisor === 0
+    ? Left("schlecht!")
+    : Right(num / divisor);
+
+safeDiv(1)(1)
+      ( x => console.error(x))
+      ( x => console.log(x));
 
 //
 // const [Cash, CreditCard, Invoice, PayPal, pay] = Choice(4);
