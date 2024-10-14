@@ -46,15 +46,18 @@ function changeDirection(orientation) {
 */
 function safeGetElementById(id) {
     const result = document.getElementById(id);
-    return result === null; // todo: your code here
+    return result === null
+        ? Left(`Cannot find element "${id}".`)
+        : Right(result);
 }
 
-const log = s => console.log(s);
+const handleError = s => console.error(s);
 
 function start() {
-
     // todo: if safeGetElementById("canvas") yields an error message, log it. Otherwise startWithCanvas
-
+    safeGetElementById("canvas")
+        (handleError)
+        (startWithCanvas);
 }
 
 const startWithCanvas = canvas => {
@@ -84,11 +87,13 @@ function nextBoard() {
     const max = 20;
     const oldHead = snake[0];
 
-    const newHead = undefined; // todo: your code here: old head plus direction
-    const head    = undefined; // todo: your code here: new head put in bounds
+    // const newHead = undefined; // todo: your code here: old head plus direction
+    // const head    = undefined; // todo: your code here: new head put in bounds
+    const newHead = pairPlus (oldHead)  (direction);
+    const head    = pairMap  (inBounds) (newHead);
 
     const pickRandom = () => Math.floor(Math.random() * max);
-    if (true) {  // todo: have we found any food?
+    if (pairEq (newHead) (food) ) {  // todo: have we found any food?
         food = Pair(pickRandom())(pickRandom());
     } else {
         snake.pop(); // no food found => no growth despite new head => remove last element
