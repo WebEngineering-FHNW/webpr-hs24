@@ -63,9 +63,10 @@ test(dierk(lastname) === "König");
 // // composed Tuple
 
 // const [Team, lead, deputy] = Tuple(2);
-// const team = Team(person)(Person("Roger")("Federer")(35));
-// test(team(lead)(fn) === "Dierk");
-// test(team(deputy)(ln) === "Federer");
+// const team = Team (person) (Person("Roger")("Federer")(35));
+// test( team(lead)(fn)   === "Dierk");
+// test( team(deputy)(ln) === "Federer");
+//
 
 // // Pair equal
 //
@@ -78,6 +79,14 @@ const safeDiv = (num) => (divisor) =>
 // either(safeDiv(1)(1))((x) => console.error(x))((x) => console.log(x));
 // id(safeDiv(1)(1))((x) => console.error(x))((x) => console.log(x));
 safeDiv(1)(1)((x) => console.error(x))((x) => console.log(x));
+const safeDiv = num => divisor =>
+    divisor === 0
+    ? Left("schlecht!")
+    : Right(num / divisor);
+
+safeDiv(1)(1)
+      ( x => console.error(x))
+      ( x => console.log(x));
 
 //
 // const [Cash, CreditCard, Invoice, PayPal, pay] = Choice(4);
