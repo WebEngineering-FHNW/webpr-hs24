@@ -13,7 +13,7 @@
             return ""
         }
         work() {
-            this.worklog.push(this.mustDo())
+            this.worklog.push(this.mustDo());
         }
     }
 
