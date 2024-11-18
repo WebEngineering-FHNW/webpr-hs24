@@ -18,7 +18,7 @@ lambdaOk.push(pair12(snd) === 2 );
 
 const updatedPair = Pair (pair12(fst) + 1) (pair12(snd));
 
-// test result report
+// test response report
 if ( lambdaOk.every(elem => elem) ) {
     document.writeln("All " + lambdaOk.length + " tests ok.");
 } else {

@@ -35,7 +35,7 @@ const snakeOk = [];
     changeDirection(countercw);
     snakeOk.push(direction === north);
 
-// test result report
+// test response report
 if ( snakeOk.every(id) ) {
     document.writeln("All " + snakeOk.length + " tests ok.");
 } else {

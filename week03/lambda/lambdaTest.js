@@ -101,7 +101,7 @@ safeDiv(1)(1)
 
 
 
-// test result report
+// test response report
 const allTestsOk = () => {
     for (let i = 0; i < ok.length; i++) { // not nice, yet. Needs improvement
         if (false === ok[i]) {

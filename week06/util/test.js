@@ -3,7 +3,7 @@
 
 const bar = extend => document.writeln("+" + "-".repeat(extend) + "+");
 
-// test result report
+// test response report
 // report :: String, [Bool] -> DOM ()
 const report = (origin, ok) => {
     const extend = 20;
