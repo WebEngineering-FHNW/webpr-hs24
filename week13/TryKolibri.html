@@ -12,6 +12,10 @@
                 stroke: color-mix(in srgb, rebeccapurple, transparent);
                 stroke-width: 0.01;
             }
+            input[type=range] {
+                display: block;
+                width: 100%;
+            }
         </style>
     </head>
     <body>
@@ -19,6 +23,10 @@
     <h1>Try Kolibri Production Bundle</h1>
 
     <div id="out"> waiting ... </div>
+    <input id="slices"   type="range"  min="2" max="200">
+    <input id="sliceNum" type="number" min="2" max="200">
+
+    <div id="slicesNumber"> waiting ... </div>
 
 
     <script>
@@ -36,22 +44,39 @@
             `;
             return resultStr
         };
-        const lines = (slices, factor) => {
-                  let resultStr = "";
-                  Walk(1, slices)
-                      .map(n => linex(n, n * factor, slices))
-                      .forEach$(str => resultStr += str);
-                  return resultStr;
-              }
+        const lines = (slices, factor) =>
+            Walk(1, slices)
+                .map(n => linex(n, n * factor, slices))
         ;
+        const join = seq => seq.reduce$( plusOp, "");
 
-        const svgStr = `
-    <svg viewBox="-1 -1 2 2" xmlns="http://www.w3.org/2000/svg">
-        ${lines(80, 89)}
-    </svg>
+        const update = (slices, factor) => {
+            const svgStr = `
+        <svg viewBox="-1 -1 2 2" xmlns="http://www.w3.org/2000/svg">
+            ${join(lines(slices, factor))}
+        </svg>
 
-        `;
-        out.innerHTML = svgStr;
+            `;
+            out.innerHTML = svgStr;
+        };
+        update(80,2);
+
+        const sliceObs = Observable(80);
+
+        slices.oninput = _evt => sliceObs.setValue(Number(slices.value));
+
+        sliceNum.oninput = _evt => sliceObs.setValue(Number(sliceNum.value));
+
+
+        sliceObs.onChange(val => update(val, 2));
+
+        sliceObs.onChange(val => slicesNumber.textContent = val);
+
+        sliceObs.onChange(val => slices.value = val);
+
+        sliceObs.onChange(val => sliceNum.value = val);
+
+
 
 
     </script>
