@@ -39,10 +39,12 @@ simpleWeekProjectorSuite.add("titleNameLabel", assert => {
     const input = root.querySelector("input"); // first input
 
     assert.is( input.getAttribute("name"),  "Mon_am_start");
-    assert.is( input.getAttribute("title"), "Mon AM Start");
 
     const label = root.querySelector("label"); // first label
     assert.is( label.textContent, "Mon AM Start");
+
+    const tooltip = root.querySelector(".popover_tooltip"); // first tooltip
+    assert.isTrue( tooltip.textContent.endsWith("Mon AM Start")); // todo: revisit after christmas change
 
 });
 

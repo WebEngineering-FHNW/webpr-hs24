@@ -1,6 +1,17 @@
 import { Sequence } from "../sequence/Sequence.js";
 
-export { Range, Walk }
+export { Range, Walk, ALL }
+
+/** A convenience value to use as the highest possible but still reliable upper bound
+ * in a long {@link Walk} or extensive {@link Range} over
+ * all integral numbers with integral increments.
+ * Higher numbers like {@link Number.MAX_VALUE} or {@link Number.POSITIVE_INFINITY}
+ * do not always increment to the next Integer reliably.
+ * @example
+ * const allFromZero = Walk(ALL);
+ * const allEven     = Walk(0, ALL, 2);
+ * */
+const ALL = Number.MAX_SAFE_INTEGER;
 
 /**
  * Creates a range of numbers between two inclusive boundaries,
@@ -18,12 +29,13 @@ export { Range, Walk }
  * @constructor
  * @pure
  * @haskell (a, a) -> [a]
- * @param { !Number } firstBoundary  - the first boundary of the range
- * @param { Number }  secondBoundary - optionally the second boundary of the range
- * @param { Number }  step - the size of a step, processed during each iteration
+ * @param { Number? } firstBoundary=ALL - the first boundary of the range, optional with default [@link ALL]
+ * @param { Number? } secondBoundary=0  - optionally the second boundary of the range, optional with default 0
+ * @param { Number? } step=1            - the size of a step, processed during each iteration, optional with default 1
  * @returns SequenceType<Number>
  *
  * @example
+ *  const numbers             = Range();
  *  const range               = Range(3);
  *  const [five, three, one]  = Range(1, 5, -2);
  *  const [three, four, five] = Range(5, 3);
@@ -31,7 +43,7 @@ export { Range, Walk }
  *  console.log(...range);
  *  // => Logs '0, 1, 2, 3'
  */
-const Range = (firstBoundary, secondBoundary = 0, step = 1) => {
+const Range = (firstBoundary=ALL, secondBoundary = 0, step = 1) => {
   const stepIsNegative = 0 > step;
   const [left, right]  = normalize(firstBoundary, secondBoundary, stepIsNegative);
 

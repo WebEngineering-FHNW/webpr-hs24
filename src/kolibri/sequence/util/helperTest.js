@@ -1,8 +1,8 @@
-import { TestSuite }                           from "../../util/test.js";
-import { Seq }                                 from "../constructors/seq/seq.js";
-import { Pair }                                      from "../../lambda/pair.js";
-import {count$, isIterable, isSequence, plus, toSeq} from "./helpers.js";
-import {Walk} from "../constructors/range/range.js";
+import { TestSuite }                                                  from "../../util/test.js";
+import { Seq }                                                        from "../constructors/seq/seq.js";
+import { Pair }                                                       from "../../lambda/pair.js";
+import { forever, isIterable, isSequence, plusOp, toSeq,limit }       from "./helpers.js";
+import { Sequence }                                                   from "../constructors/sequence/Sequence.js";
 
 const testSuite = TestSuite("Sequence: helper");
 
@@ -36,22 +36,33 @@ testSuite.add("toSeq is lazy", assert => {
   assert.is(firstValue, 42);
 });
 
-testSuite.add("plus with string", assert => {
+testSuite.add("plusOp with string", assert => {
   const strings = "a b c".split(" ");
-  const string  = strings.reduce( plus, "");
+  const string  = strings.reduce(plusOp, "");
   assert.is( string, "abc" );
 });
 
-testSuite.add("plus with numbers", assert => {
-  const nums = Seq(1,2,3);
-  const result  = nums.reduce$( plus, 0);
+testSuite.add("plusOp with numbers", assert => {
+  const nums = Seq(1, 2, 3);
+  const result  = nums.reduce$(plusOp, 0);
   assert.is(result, 6 );
 });
 
-testSuite.add("count$", assert => {
-  assert.is(count$(Seq()),        0 );
-  assert.is(count$(Seq("x")),     1 );
-  assert.is(count$(Walk(1,1000)), 1000 );
+testSuite.add("plusOp with bigint", assert => {
+  const nums = Seq(1n, 2n, 3n);
+  const result  = nums.reduce$(plusOp, 0n);
+  assert.is(result, 6n );
+});
+
+testSuite.add("limit ok", assert => {
+  const halves = Sequence(1, forever, n => n/2);
+  assert.is(limit(1/2,    halves),       1/2    );
+  assert.is(limit(1/1024, halves),       1/1024 );
+});
+
+testSuite.add("limit not found", assert => {
+  assert.is(limit(1, Seq()),       undefined );
+  assert.is(limit(1, Seq(10,5,3)), undefined );
 });
 
 testSuite.run();

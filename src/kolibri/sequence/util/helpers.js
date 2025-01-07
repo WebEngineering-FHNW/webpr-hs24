@@ -2,7 +2,7 @@ import { map }               from "../operators/map/map.js"
 import { id }                from "../../stdlib.js"
 import { SequencePrototype } from "../sequencePrototype.js";
 
-export { toSeq, isIterable, iteratorOf, ensureSequence, isSequence, forever, plus, count$ }
+export { toSeq, isIterable, iteratorOf, ensureSequence, isSequence, forever, plusOp, limit }
 
 /**
  * Casts an arbitrary {@link Iterable} into the {@link SequenceType}.
@@ -56,27 +56,39 @@ const ensureSequence = iterable =>
 const forever = _ => true;
 
 /**
- * Convenience function to be used in reduce situations where the
- * plus operation should be used as a projection.
+ * Convenience "plus operator" to be used in reduce situations where the
+ * plus operator should be used in a projection.
  * Works with both, strings or numbers.
- * @param { String | Number } acc
- * @param { String | Number } cur
- * @return { String | Number }
+ * @param  { String | Number | BigInt } acc
+ * @param  { String | Number | BigInt } cur
+ * @return { String | Number | BigInt }
  * @example
  *   const nums = Seq(1,2,3);
- *   const result  = nums.reduce$( plus, 0);
+ *   const result  = nums.reduce$( plusOp, 0);
  *   assert.is(result, 6 );
  *   
  *   const strings = "a b c".split(" ");
- *   const string  = strings.reduce( plus, "");
+ *   const string  = strings.reduce( plusOp, "");
  *   assert.is( string, "abc" );
  */
-const plus = (acc, cur) => acc + cur;
+const plusOp = (acc, cur) => acc + cur;
 
 /**
- * Convenience function to count the number of elements in a {@link SequenceType sequence}.
- * @template _T_
- * @param  { SequenceType<_T_> } sequence - must be finite as indicated by the trailing "$"
- * @return { Number } zero or positive integer number
+ * Calculate the limit that the number sequence approaches by comparing successive elements until they are
+ * less than epsilon apart.
+ * Return {@link undefined} if no limit matches the criteria.
+ * @WARNING **Might not finish when sequence is infinite and limit cannot be found.**
+ * @param { Number }                epsilon
+ * @param { SequenceType<Number> }  numberSequence
+ * @return { undefined| Number }    the first element with less than epsilon distance from its predecessor
  */
-const count$ = sequence => sequence.foldl$( (acc, _cur) => ++acc, 0);
+const limit = (epsilon, numberSequence) => {
+    let last = numberSequence.head();
+    for (const it of numberSequence.drop(1)) {
+        if ( Math.abs(last - it) <= epsilon) {
+            return it;
+        }
+        last = it;
+    }
+    return undefined;
+};

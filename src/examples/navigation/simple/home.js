@@ -1,7 +1,7 @@
 import {dom}                                    from "../../../kolibri/util/dom.js";
 import {URI_HASH_UNSTYLED, href, URI_HASH_HOME} from "../../../customize/uriHashes.js";
-import {Page}                                   from "../../../kolibri/navigation/page/page.js";
-import {KOLIBRI_LOGO_SVG}                       from "../../../kolibri/style/kolibriStyle.js";
+import {Page}             from "../../../kolibri/navigation/page/page.js";
+import {KOLIBRI_LOGO_SVG} from "../../../customize/kolibriStyle.js";
 
 export { HomePage }
 
@@ -13,7 +13,7 @@ const PAGE_CLASS = URI_HASH_HOME.substring(1);
  * @constructor
  */
 const HomePage = () => Page(/** @type { PageDataType } */{
-    titleText:         "Home Page",
+    titleText:         "New Navigation",
     activationMs:       1000,
     passivationMs:      1000,
     pageClass:          PAGE_CLASS,

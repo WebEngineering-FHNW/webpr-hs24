@@ -1,19 +1,24 @@
-import {dom}                 from "../../util/dom.js";
-import {href, URI_HASH_HOME} from "../../../customize/uriHashes.js";
+import { dom, select }         from "../../util/dom.js";
+import { href, URI_HASH_HOME } from "../../../customize/uriHashes.js";
+import {ICON_KOLIBRI}          from "../../../customize/icons.js";
+import {icon}                  from "../../style/icon.js";
 
 export { SiteProjector }
 
-const PAGE_CLASS     = "site";
+const SITE_CLASS     = "site";
 
 const SiteProjector = siteController => {
 
-     const sideNavigationElement = bodyElement.querySelector("#side-nav");
-     const topNavigationElement  = bodyElement.querySelector("#top-nav");
-     const activeContentElement  = bodyElement.querySelector("#content");
-     const passiveContentElement = bodyElement.querySelector("#content-passivated");
+     const [logoAnchorElement]     = select(bodyElement,"#logo a");
+     const [sideNavigationElement] = select(bodyElement,"#side-nav");
+     const [topNavigationElement ] = select(bodyElement,"#top-nav");
+     const [activeContentElement ] = select(bodyElement,"#content");
+     const [passiveContentElement] = select(bodyElement,"#content-passivated");
 
      document.head.append(...headElements);
      document.body.append(bodyElement);
+
+     logoAnchorElement.append(...icon(ICON_KOLIBRI));
 
      siteController.onUnsupportedUriHash( uriHash =>                     // think about monolog and i18n
          alert(`Sorry, the target "${uriHash}" is not available.`)
@@ -67,16 +72,18 @@ const headElements = dom(`
         <title>(no title - will be replaced)</title>
         <link id="favicon" rel="icon" type="image/x-icon" href='${window.BASE_URI}img/logo/logo.svg'>
         
-        <style data-style-id="${PAGE_CLASS}">
+        <style data-style-id="${SITE_CLASS}">
         
             /*  use layers to avoid overriding defaults by accident */
-            @layer pageLayer, navigationLayer, siteLayer, kolibriLayer;
+            @layer pageLayer, navigationLayer, siteLayer, kolibriLayer, kolibriLightLayer;
         
-            @import "${window.BASE_URI}css/kolibri-base-light.css" layer(kolibriLayer);
+            /* the new styling will have import such that we only need one line here. */
+            @import "${window.BASE_URI}css/kolibri-base.css"         layer(kolibriLayer);
             
-            @layer siteLayer { // styles for the whole website 
+            @layer ${SITE_CLASS}Layer { /* styles for the whole website */ 
                  body {
                      margin: 0;
+                     --color-nav-bg:         hsl( from var(--kolibri-color-secondary-bg) h s calc(l * 1.08));
                  }
                  #application-frame {
                      position:               fixed;
@@ -94,16 +101,17 @@ const headElements = dom(`
                  #top-nav {
                      grid-area:              top-nav;
                      align-self:             center;
-                     filter:                 drop-shadow(0 0 .5rem white);
-                     --kolibri-color-accent: var(--kb-color-hsl-bg-light);
-                     font-weight:            bold;
+                     --kolibri-color-accent: white;
                      & a {
                          margin-right:       1em;
+                     }
+                     & a:not(.current) {                         
+                         color:              var(--kolibri-color-secondary-bg);
                      }
                  }
                  #side-nav {
                      grid-area:              side-nav;
-                     background-color:       var(--kb-color-hsl-bg-light);
+                     background-color:       var(--color-nav-bg);
                      box-shadow:             var(--kolibri-box-shadow);
                      padding-block:          1lh;
                      & a {
@@ -114,23 +122,20 @@ const headElements = dom(`
                  #logo {
                      grid-area:              logo;
                      justify-self:           center;
-                     & a img {
+                     & a svg {                        
+                         width:              3rem;                         
+                         aspect-ratio:       1 / 1;
                          display:            block;
                          border-radius:      50%;
-                         background-color:   var(--kb-color-hsl-bg-light);
-                         width:              3rem;
-                         aspect-ratio:       1 / 1;
-                         box-shadow:         1px 1px .2rem 0 var(--kb-color-hsl-lavender-700) inset; 
+                         background-color:   var(--color-nav-bg);
+                         box-shadow:         1px 1px .2rem 0 var(--kolibri-color-accent) inset; 
                      }
                  }
                  #top-backdrop {
                      grid-row:               1;
                      grid-column:            1 / -1;
                      z-index:                -10;
-                     background-image:       linear-gradient( 90deg,
-                                                 var(--kb-color-hsl-pink-300) 50%,
-                                                 var(--kb-color-hsl-lavender-700)
-                                             );
+                     background-image:       var(--kolibri-color-gradient-primary)
                  }
      
                  .content {                  /* must be shared in #content and #content-passivated */
@@ -143,6 +148,15 @@ const headElements = dom(`
                  #content-passivated {
                      z-index:                -10;
                  }
+                 
+                 @media (width < 90ch) {    /* --kolibri-prosa-width plus side-nav hidden width */
+                    .content {                        
+                        grid-column:        1 / -1;
+                    }
+                    #side-nav {
+                        display:            none;
+                    }
+                 }
             }
 
         </style>
@@ -153,11 +167,10 @@ const [bodyElement] = dom(`
         <div id="top-backdrop"></div>
         <div id="logo">
             <a ${href(URI_HASH_HOME)}>
-                <img src="${window.BASE_URI}img/logo/logo-new-128.svg" alt="Kolibri-logo">
             </a>
         </div>
-        <div  id="top-nav"> top  nav stand-in</div>
-        <div  id="side-nav">side nav stand-in</div>
+        <div  id="top-nav"></div>
+        <div  id="side-nav"></div>
         <div  id="content-passivated"   class="content">
             <!-- holder to display content during passivation -->
         </div>

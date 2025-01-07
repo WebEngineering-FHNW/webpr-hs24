@@ -2,14 +2,15 @@
 
 /**
  * @module util/test
- * The test "framework", exports the Suite function plus a total of how many assertions have been tested
+ * The test utility, exports the Suite, helper functions,  plus {@link Observable}s for
+ * how many assertions have been tested and whether any failed.
  */
 
-import {accentColor, okColor}                      from "../style/kolibriStyle.js";
-import {id, Just, Tuple}                           from "../stdlib.js";
-import {Observable}                                from "../observable.js";
-import {dom}                                       from "./dom.js";
-import {LoggerFactory}                             from "../logger/loggerFactory.js";
+import { colorAccent, colorOk }                         from "../../customize/kolibriStyle.js";
+import { id, Just, Tuple }                              from "../stdlib.js";
+import { Observable }                                   from "../observable.js";
+import { dom }                                          from "./dom.js";
+import { LoggerFactory }                                from "../logger/loggerFactory.js";
 import {
     addToAppenderList,
     getLoggingContext,
@@ -17,10 +18,10 @@ import {
     removeFromAppenderList,
     setLoggingContext,
     setLoggingLevel
-}                                                  from "../logger/logging.js";
-import {LOG_DEBUG}                                 from "../logger/logLevel.js";
-import {Appender as ConsoleAppender}               from "../logger/appender/consoleAppender.js";
-import {LOG_CONTEXT_All, LOG_CONTEXT_KOLIBRI_TEST} from "../logger/logConstants.js";
+}                                                       from "../logger/logging.js";
+import { LOG_DEBUG }                                    from "../logger/logLevel.js";
+import { ConsoleAppender }                              from "../logger/appender/consoleAppender.js";
+import { LOG_CONTEXT_All, LOG_CONTEXT_KOLIBRI_TEST }    from "../logger/logConstants.js";
 
 export { TestSuite, total, failed, asyncTest, withAppender };
 
@@ -290,8 +291,8 @@ const TestSuite = suiteName => {
  * @private
  */
 const report = (origin, results, messages) => {
-    const okStyle     = `style="color: ${okColor};"`;
-    const failedStyle = `style="color: ${accentColor};"`;
+    const okStyle     = `style="color: ${colorOk};"`;
+    const failedStyle = `style="color: ${colorAccent};"`;
 
     if ( results.every( elem => elem) ) {
         write (`

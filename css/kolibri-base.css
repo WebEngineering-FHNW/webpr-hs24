@@ -1,37 +1,12 @@
 /* make sure to keep in line with kolibriStyle.js */
 
-@font-face {
-    font-family: "RobotoSlab-Light";
-    src: local("RobotoSlab-Light"),
-         url("../font/Roboto_Slab/static/RobotoSlab-Light.ttf") format("truetype");
-}
-@font-face {
-    font-family: "RobotoSlab-Regular";
-    src: local("RobotoSlab-Bold"),
-         url("../font/Roboto_Slab/static/RobotoSlab-Regular.ttf") format("truetype");
-}
-@font-face {
-    font-family: "Rubik-Light";
-    src: local("Rubik-Light"),
-         url("../font/Rubik/static/Rubik-Light.ttf") format("truetype");
-}
-@font-face {
-    font-family: "JetBrainsMono-VariableFont_wght";
-    src: local("JetBrainsMono-VariableFont_wght"),
-         url("../font/JetBrains_Mono/JetBrainsMono-VariableFont_wght.ttf") format("truetype");
-}
+@import "./kolibri-fonts.css";
+@import "./kolibri-colors.css";
+
 
 :root {
-    --kolibri-color-accent:  hsl( 322, 73%, 52%);
-    --kolibri-color-output:  hsl( 256, 82%, 55%);
-    --kolibri-color-ok:      hsl( 104, 89%, 28%);
-    --kolibri-color-select:  hsl(  46, 90%, 84%);
-    --kolibri-color-neutral: hsl(   0,  0%, 74%);
-    --kolibri-color-shadow:  hsla(256, 82%, 55%, 0.2);
-    --kolibri-box-shadow:    0 4px  8px 0 var(--kolibri-color-shadow),
-                             0 6px 20px 0 var(--kolibri-color-shadow);
-    padding:    0;
-    margin:     0;
+    padding:                 0;
+    margin:                  0;
 }
 *, *::before, *::after {
     box-sizing: border-box;
@@ -43,36 +18,35 @@
 /* --- typography --- */
 
 :root {
-    --font-serif:       "RobotoSlab-Light",   serif;
-    --font-serif-bold:  "RobotoSlab-Regular", serif;
-    --font-sans-serif:  "Rubik-Light", ui-sans-serif, sans-serif;
-    --font-mono:        "JetBrainsMono-VariableFont_wght", monospace;
-
-    font-family:    var(--font-serif), system-ui;
+    font-family: var(--kb-font-family-default), system-ui;
 }
+
+header, h1, h2 {
+    color: var(--kolibri-color-product);
+}
+
 header h1 {
-    color: var(--kolibri-color-output);
     letter-spacing: 0.06em;
 }
-header .subtitle {
-    color:          var(--kolibri-color-output);
-}
+
 h1, h2, h3 {
-    font-family:    var(--font-serif-bold), system-ui;
-    text-wrap:      balance;
+    font-family: var(--kb-font-family-stylish),var(--kb-font-family-default), system-ui;
+    font-weight: normal;
+    text-wrap:   balance;
 }
-p, li, div, figcaption {
-    letter-spacing: 0.02em;
+
+div, p, ul, ol, dl, form, fieldset, label {
+    font-family: var(--kb-font-family-running-text),var(--kb-font-family-default), system-ui;
+    letter-spacing: 0.03em;
+    font-weight:    300;
 }
-form, fieldset, label, input, button {
-    font-family:    var(--font-sans-serif), system-ui;
-    letter-spacing: 0.02em;
+
+input, button, textarea, select { /* interaction elements */
+    font-family:    system-ui;
+    letter-spacing: 0.03em;
+    font-weight:    normal;
 }
-figcaption {
-    font-style:     italic;
-    font-size:      var(--font-size-caption);
-    text-align:     end;
-}
+
 /* --- end typography --- */
 
 /* --- default element appearance --- */
@@ -80,22 +54,28 @@ ul {
     padding-left:       1em;
 }
 ul li::marker {
-  color:                var(--kb-hsla-primary-accent);
+  color:                var(--kolibri-color-primary-accent);
 }
 
 figure {
     margin-inline:      0;
 }
-
+figcaption {
+    font-style:         italic;
+    font-size:          var(--font-size-caption);
+    text-align:         end;
+}
 em {                    /* emphasis looks like highlighted with text marker */
     position:           relative;
+    padding-inline:     0.2em 0.3em;
     &::before {
         content:        "";
         position:       absolute;
-        inset:          0;  /* -3px leads to strange line-break issues */
+        inset:          0 0 -.2em 0;  /* inline -3px leads to strange line-break issues */
+        border-radius:  5% 5% 20% 20%;
         background-color: var(--kolibri-color-select);
         z-index:        -10;
-        rotate:         -2deg;
+        rotate:         -3deg;
         opacity:        60%;
     }
 }
@@ -186,12 +166,20 @@ label + span > input:invalid + span.invalidation_marker {
       }
  }
 
-
+/* --- standard values --- */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms ;
   }
 }
+:root {
+    /*
+        Needed to animate e.g. from height:0 to height:auto.
+        Works in Chrome but does not work in FF, Safari yet (dec.24).
+    */
+    interpolate-size: allow-keywords; /* progressive enhancement*/
+}
+/* --- end of standard values --- */
 
 /* --- a11y support: the "skip" link --- */
 
@@ -226,4 +214,74 @@ a.skip-link:not(:focus):not(:active) {
     text-wrap:      pretty;
 }
 
+.font_numeric {
+    font-variant-numeric: tabular-nums slashed-zero;
+}
+.font_numeric_fraction {
+    font-variant-numeric: diagonal-fractions;
+}
+
 /* --- end of utility classes --- */
+
+
+/* --- experimental popover and anchor positioning --- */
+
+[popover] {             /* style that pops for all elements with popover attribute */
+      flex-direction:     column;
+      gap:                .5em;
+      background-image:   linear-gradient(170deg, #4c4cc6 45%, darkblue 50%, darkblue 80%, #4c4cc6);
+      box-shadow:         .2em .2em  1em 0 lightslategray,
+                          0    0    .5em 0 white           inset;
+      border-width:       0;
+      border-radius:      .5em;
+      color:              white;
+      font-family:        system-ui;
+      padding:            1em;
+  }
+
+  :popover-open {
+      animation-name:             appear;
+      animation-duration:         .5s;
+      animation-timing-function:  ease-in-out;
+      animation-fill-mode:        forwards;
+  }
+
+  /* For the moment, don't do this as it makes the UI appear flickering when*/
+  /* the popover closes. Sadly, there seems to be no way to transition back on close that works on all browsers.*/
+  /* For chrome and Safari (not FF yet), we could use a view transition. */
+  /*:popover-open::backdrop {*/
+  /*    background-color:           color-mix(in hsl, white, transparent 70%);*/
+  /*    transition:                 background-color 1s linear;*/
+  /*    @starting-style {*/
+  /*        background-color:       transparent;*/
+  /*    }*/
+  /*}*/
+
+  .popover_anchor {
+      /* anchor-name will be set on the element */
+      position:           relative;
+      display:            inline-flex;  /* for FF and Safari or it does not always work */
+  }
+  .popover_tooltip {
+      /* position-anchor will be set on the element */
+      position:           absolute;     /* override the popover-hidden default */
+      inset:              unset;
+      top:                anchor(top);  /* dirty trick for FF and Safari (anchor(bottom) does not work) */
+      left:               anchor(left);
+      translate:          0 1.2lh;      /* dirty trick for FF and Safari */
+
+      transform-origin:   top center; /* makes expandY a drop-down */
+  }
+.popover_tooltip:popover-open {
+      display:                    flex;              /* override */
+      animation-name:             appear, expandY;
+  }
+
+  @keyframes appear {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+  }
+  @keyframes expandY {
+      from {  transform: scaleY(0); }
+      to   {  transform: scaleY(1); }
+  }
